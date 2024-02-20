@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Set the paths to the directory and CSV file
+directory_path="/path/to/your/directory"
+csv_file="/path/to/your/file.csv"
+
+# Check if the directory and CSV file exist
+if [ ! -d "$directory_path" ] || [ ! -f "$csv_file" ]; then
+    echo "Directory or CSV file not found."
+    exit 1
+fi
+
+# Create a CSV report file
+report_file="comparison_report.csv"
+echo "Item,Status" > "$report_file"
+
+# Loop through files and folders in the directory
+for item in "$directory_path"/*; do
+    # Check if the item is a file
+    if [ -f "$item" ]; then
+        # Extract the filename from the path
+        filename=$(basename "$item")
+        
+        # Check if the filename is present in the CSV file
+        grep -q "$filename" "$csv_file"
+        if [ $? -eq 0 ]; then
+            echo "$filename,Found in CSV" >> "$report_file"
+        else
+            echo "$filename,Not found in CSV" >> "$report_file"
+        fi
+    fi
+done
+
+# Loop through subdirectories in the directory
+for item in "$directory_path"/*/; do
+    # Extract the subdirectory name from the path
+    dirname=$(basename "$item")
+
+    # Check if the subdirectory name is present in the CSV file
+    grep -q "$dirname" "$csv_file"
+    if [ $? -eq 0 ]; then
+        echo "$dirname,Found in CSV" >> "$report_file"
+    else
+        echo "$dirname,Not found in CSV" >> "$report_file"
+    fi
+done
+
+echo "Report generated: $report_file"
