@@ -8,7 +8,7 @@ found_csv="/test/found_items.csv"
 not_found_csv="/test/not_found_items.csv"
 
 # Directory path to check for files
-directory_path="/your/directory/path"
+directory_path="/test/folder"
 
 # Create or truncate the output CSV files
 echo "Item,Status" > "$found_csv"
@@ -19,10 +19,16 @@ while IFS=, read -r item; do
     # Remove quotes from the item name
     item=$(echo "$item" | tr -d '"')
 
-    # Check if the item exists in the directory
-    if [ -e "$directory_path/$item" ]; then
-        echo "$item,Found" >> "$found_csv"
+    # Extract the directory name from the item
+    dir_name=$(dirname "$item")
+
+    # Extract the file name from the item
+    file_name=$(basename "$item")
+
+    # Check if the file exists in the directory
+    if [ -e "$directory_path/$dir_name/$file_name" ]; then
+        echo "$item" >> "$found_csv"
     else
-        echo "$item,Not found" >> "$not_found_csv"
+        echo "$item" >> "$not_found_csv"
     fi
 done < "$csv_file"
