@@ -1,13 +1,13 @@
 echo "Activating Gundam OS..."
-sleep 2
+sleep 1
 
 echo "Booting Core Systems..."
-sleep 2
+sleep 1
 
 # Insert your ASCII art or custom message here
 echo -e "\nMOBILE SUIT OPERATION NEO SYSTEM\n"
 
-sleep 2
+sleep 1
 
 echo "
    ___   .     . __    _ .___       .    __   __                                      .               
