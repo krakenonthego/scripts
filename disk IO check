@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Set variables
+block_size="4k"  # You can adjust this to your preferred block size
+count=100        # Number of blocks to read/write
+mounted_directory="/path/to/mounted/drive"  # Change this to the actual path
+log_file="$mounted_directory/disk_latency_test.log"
+
+# Ensure the mounted directory exists
+if [ ! -d "$mounted_directory" ]; then
+  echo "Error: Mounted directory does not exist."
+  exit 1
+fi
+
+# Measure read latency
+echo "Testing read latency..."
+(time (dd if=/dev/zero of="$mounted_directory/test_file" bs=$block_size count=$count 2>&1 > /dev/null) 2>&1) >> $log_file
+echo "Read latency test complete."
+
+# Measure write latency
+echo "Testing write latency..."
+(time (dd if=/dev/zero of="$mounted_directory/test_file" bs=$block_size count=$count conv=fsync 2>&1 > /dev/null) 2>&1) >> $log_file
+echo "Write latency test complete."
+
+echo "Results have been saved to $log_file"
